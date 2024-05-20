@@ -1,0 +1,70 @@
+Cosas de git,
+Estos 2 pa hacer el log,
+    git config --global user.name "aquidentroeluser" 
+    git config --global user.email "aquidentro@elmail" 
+
+git init - inicia el git
+git add ... - añade el archivo indicado, si pones un . añade todo el directorio
+git commit -m "texto"
+git log - mira user, mail y commits hechos
+git status - para mirar el estado actual
+git remote add origin
+git branch -m main
+git push -m
+
+
+Cosas de Vagrant,
+config.vm.box = "box en cuestión" - config de la box base a usar en nuestro SO  (se suele usar ubuntu/ trusty64 o xenial64)
+config.vm.hostname = "nombre del host" - config del nombre de host de la vm
+config.vm.network "private_network", ip: "Ip en cuestión"
+config.vm.network "public_network", type:"dhcp" - dhcp es el protocolo
+config.vm.synced_folder ".", "/carpetaEnLaMaquina" - sincronizamos el archivo actual con el de dentro de la vm
+config.vm.provider "virtualbox" do |vb| - sirve para establecer un proveedor
+    vb.gui = true - este campo asigna una config a la variable vb
+    vb.memory = "MB correspondientes" -  asigna la cantidad de RAM asignada a la maquina virtual (en MB)
+    vb.cpus = (num cpus) - asigna la cantidad de núcleos deseados a la vm
+end
+
+config.vm.provision "shell", inline: <<-SHELL - script shell que se ejecutará en línea
+    sudo apt update - actualiza la listas de paquetes del sistema operativo mediante APT
+    sudo apt install -y (nombre del programa a instalar, en minúsculas) - instalar mediante apt, el tag -y para que no nos pida la confirmacion al arrancar
+    sudo sed -i -e 's/\\/var\\//www\\/html/\\/(nombreDeCarpetaSincAqui)/g' /etc/nginx/sites-enabled/default - Cambia la ruta de la carpeta raíz del servidor
+SHELL
+
+vagrant init - crea archivo vagrant
+vagrant reload - reinicia vm
+vagrant ssh - nos mete dentro del SO
+vagrant ssh -c "comando aqui" - gracias al flag (-c) podemos usar comandos desde fuera del SOy
+sudo echo "<p>Lo que sea por ejemplo</p>" > /(filealquemeterlo)/index.html 
+sudo systemctl restart programaEjemplo - hace un restart del programa en cuestión  
+
+Cosas de sql/vbox/etc,
+
+config.vm.provision "shell", inline: <<-SHELL - crear un .sql de inserts mediante el shell dentro del vagrantfile
+  echo "-- Insertar datos en la tabla" > /home/vagrant/nombreArchivo.sql
+  echo "INSERT INTO baseDeDatos.tabla (campo1, campo2, campo3) VALUES " >> /home/vagrant/nombreArchivo.sql
+  echo "(valor1, valor2, valor3), " >> /home/vagrant/nombreArchivo.sql
+  echo "(valor1, valor2, valor3);" >> /home/vagrant/nombreArchivo.sql
+SHELL
+
+sudo su - eleva a privilegios del superusuario
+sudo apt install mysql-server - instala mysqlserver
+sudo systemctl start mysql - arrancar mysql
+sudo systemctl enable mysql - habilitar servidor
+ 
+mysql -u root -p - para iniciar sesión en sql
+
+CREATE DATABASE (nombreBD); 
+USE (nombreBD);
+CREATE TABLE (nombreTabla) (
+	clavePrimaria INT AUTO_INCREMENT PRIMARY KEY,
+	etc VARCHAR(tamaño n) NOT NULL,
+	etc INT,
+	etc DECIMAL(M, D) - nota: M es digitos a la derecha y D a la izq.
+);
+
+SOURCE archivo.sql - (ejecutar dentro de sql) ejecuta el archivo (que emplearemos para hacer inserts probablemente) 
+sudo systemctl stop mysql - detiene mysql
+systemctl status mysql - muestra el estado del programa
+ALTER DATABASE (nombreBase) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
